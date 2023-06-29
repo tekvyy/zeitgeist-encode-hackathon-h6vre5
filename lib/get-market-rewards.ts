@@ -14,7 +14,11 @@ const getMarketRewards = async (
 ): Promise<{ marketId: number; totalRewards: string }[]> => {
   // ... implementation here
 
-  let result = [];
+  let result:
+    | Market[]
+    | { marketId: number; totalRewards: string }[]
+    | PromiseLike<{ marketId: number; totalRewards: string }[]> = [];
+
   const baseAsset = 'Ztg';
   const queryToFetchMarkets = gql`
   query QueryMarkets($address: String!) {
@@ -131,7 +135,11 @@ const getMarketRewards = async (
   }
   result = localMarketArray;
 
-  return result;
+  return new Promise<{ marketId: number; totalRewards: string }[]>(
+    (resolve) => {
+      resolve(result);
+    }
+  );
 };
 
 export default getMarketRewards;
